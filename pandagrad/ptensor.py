@@ -51,7 +51,8 @@ class Function:
 
     def backward(self, grad):
         raise NotImplementedError
-
+    
+    
 class Add(Function):
     def forward(self, a: PTensor, b: PTensor) -> PTensor:
         self.a = a
@@ -108,6 +109,7 @@ class MatMul(Function):
     
     def backward(self, grad: np.ndarray):
         if self.a.requires_grad:
-            pass
+            self.a.backward(grad @ self.b.data.T)
         if self.b.requires_grad:
-            pass
+            self.b.backward(self.a.data.T @ grad)   
+            
